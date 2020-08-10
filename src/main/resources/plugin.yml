@@ -1,0 +1,15 @@
+name: Artillery
+version: 1.0.0
+main: net.atlantis.artillery.Artillery
+api-version: 1.13
+
+commands:
+  artillery:
+    description: artillery command
+    usage: /<command>
+    permission: Artillery.admin
+    permission-message: You don't have <permission>
+permissions:
+  Artillery.admin:
+    description: Gives access to Artillery admin commands
+    default: op

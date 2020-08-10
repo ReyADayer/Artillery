@@ -1,0 +1,5 @@
+# Artillery
+
+## usage
+
+/artillery set
