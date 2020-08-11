@@ -14,7 +14,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import spawn
+import net.atlantis.artillery.ext.spawn
 
 class ArtilleryEntity {
     companion object {

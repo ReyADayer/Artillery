@@ -1,3 +1,5 @@
+package net.atlantis.artillery.ext
+
 import org.bukkit.Location
 import org.bukkit.Particle
 import org.bukkit.Sound

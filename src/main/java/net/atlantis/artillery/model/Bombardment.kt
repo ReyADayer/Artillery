@@ -17,9 +17,9 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
-import playSound
-import random
-import spawnParticle
+import net.atlantis.artillery.ext.playSound
+import net.atlantis.artillery.ext.random
+import net.atlantis.artillery.ext.spawnParticle
 import java.util.concurrent.TimeUnit
 
 class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
