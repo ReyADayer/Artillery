@@ -12,7 +12,7 @@ object Dependencies {
     }
 
     object Spigot {
-        val version = "1.16.1-R0.1-SNAPSHOT"
+        val version = "1.15.2-R0.1-SNAPSHOT"
         val api = "org.spigotmc:spigot-api:$version"
         val repository = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
