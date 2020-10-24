@@ -1,10 +1,8 @@
 package net.atlantis.artillery.model
 
 import net.atlantis.artillery.ext.getEntityMetadata
-import net.atlantis.artillery.ext.setBooleanMetadata
 import net.atlantis.artillery.ext.setEntityMetadata
-import net.atlantis.artillery.ext.setStringMetadata
-import net.atlantis.artillery.metadata.MetadataKey
+import net.atlantis.artillery.ext.spawn
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -14,7 +12,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import net.atlantis.artillery.ext.spawn
+import setNbt
 
 class ArtilleryEntity {
     companion object {
@@ -271,7 +269,7 @@ class ArtilleryEntity {
             it.setAI(false)
             it.isVisible = false
             it.isSmall = true
-            it.setBooleanMetadata(plugin, MetadataKey.IS_ARTILLERY.key, true)
+            it.persistentDataContainer.setNbt(plugin, ArtilleryNbtKey.IsArtillery, 1)
         } as ArmorStand
         setArmorStands(armorStand, plugin)
     }
@@ -344,8 +342,8 @@ class ArtilleryEntity {
             it.setGravity(false)
             it.isVisible = false
             entity.setEntityMetadata(plugin, tag, it)
-            it.setStringMetadata(plugin, MetadataKey.NAME.key, "CannonPart")
-            it.setBooleanMetadata(plugin, MetadataKey.IS_PART.key, true)
+            it.persistentDataContainer.setNbt(plugin, BasicNbtKey.Name, "CannonPart")
+            it.persistentDataContainer.setNbt(plugin, ArtilleryNbtKey.IsPart, 1)
         }
     }
 }

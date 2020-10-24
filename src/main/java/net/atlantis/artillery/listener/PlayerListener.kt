@@ -1,13 +1,13 @@
 package net.atlantis.artillery.listener
 
+import getNbt
 import net.atlantis.artillery.ext.getBooleanMetadata
-import net.atlantis.artillery.ext.getEntityMetadata
 import net.atlantis.artillery.metadata.MetadataKey
 import net.atlantis.artillery.metadata.PlayerFlagMetadata
 import net.atlantis.artillery.model.ArtilleryEntity
+import net.atlantis.artillery.model.ArtilleryNbtKey
 import net.atlantis.artillery.model.Bombardment
 import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -27,7 +27,7 @@ class PlayerListener(private val plugin: JavaPlugin) : Listener {
         if (playerFlagMetadata.getFlag(player)) {
             return
         }
-        if ((event.action == Action.RIGHT_CLICK_AIR || event.action == Action.RIGHT_CLICK_BLOCK) && player.getBooleanMetadata(MetadataKey.IS_RIDING.key)) {
+        if (event.action == Action.LEFT_CLICK_AIR && player.getBooleanMetadata(MetadataKey.IS_RIDING.key)) {
             playerFlagMetadata.avoidTwice(player)
             Bombardment(player, plugin).execute()
             event.isCancelled = true
@@ -43,9 +43,11 @@ class PlayerListener(private val plugin: JavaPlugin) : Listener {
         }
         val entity = event.rightClicked
         if (entity is ArmorStand) {
-            getArtilleryEntity(entity)?.let {
+            if (entity.persistentDataContainer.getNbt(plugin, ArtilleryNbtKey.IsArtillery, 0) == 1.toByte()) {
                 playerFlagMetadata.avoidTwice(player)
                 ArtilleryEntity().onClick(player, entity, plugin)
+                event.isCancelled = true
+            } else if (entity.persistentDataContainer.getNbt(plugin, ArtilleryNbtKey.IsPart, 0) == 1.toByte()) {
                 event.isCancelled = true
             }
         }
@@ -60,20 +62,6 @@ class PlayerListener(private val plugin: JavaPlugin) : Listener {
                 if (player.hasMetadata(MetadataKey.IS_RIDING.key)) {
                     player.removeMetadata(MetadataKey.IS_RIDING.key, plugin)
                 }
-            }
-        }
-    }
-
-    private fun getArtilleryEntity(entity: Entity): Entity? {
-        return when {
-            entity.getBooleanMetadata(MetadataKey.IS_ARTILLERY.key) -> {
-                entity
-            }
-            entity.getBooleanMetadata(MetadataKey.IS_PART.key) -> {
-                entity.getEntityMetadata(MetadataKey.ARTILLERY_ENTITY.key)
-            }
-            else -> {
-                null
             }
         }
     }

@@ -2,6 +2,11 @@ package net.atlantis.artillery.model
 
 import io.reactivex.Observable
 import net.atlantis.artillery.ext.getEntityMetadata
+import net.atlantis.artillery.ext.getIntMetadata
+import net.atlantis.artillery.ext.playSound
+import net.atlantis.artillery.ext.random
+import net.atlantis.artillery.ext.setIntMetadata
+import net.atlantis.artillery.ext.spawnParticle
 import net.atlantis.artillery.metadata.MetadataKey
 import net.atlantis.artillery.range.SkillRange
 import net.atlantis.artillery.range.SkillRectRange
@@ -10,6 +15,7 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.block.Container
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -17,17 +23,10 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
-import net.atlantis.artillery.ext.playSound
-import net.atlantis.artillery.ext.random
-import net.atlantis.artillery.ext.spawnParticle
 import java.util.concurrent.TimeUnit
 
 class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
-    private lateinit var vector: Vector
-    private lateinit var initialLocation: Location
     private val explodeEntities = mutableListOf<Entity>()
-
-    private lateinit var currentLocation: Location
 
     private val range = SkillRectRange(0.5, 0.5, 0.5)
 
@@ -40,38 +39,79 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
     }
 
     fun start() {
-        val cannon = player.getEntityMetadata(MetadataKey.ARTILLERY_ENTITY.key) ?: return
-        val cannonPart = cannon.getEntityMetadata(ArtilleryEntity.CANNON_3) as ArmorStand? ?: return
-        initialLocation = cannonPart.eyeLocation
-        vector = player.eyeLocation.direction
-        initialLocation.add(vector.x * 1.0, vector.y * 1.0, vector.z * 1.0)
-        val x = 0.0
-        val y = 0.0
-        val z = 0.0
-        currentLocation = initialLocation.let { LocationUtil.transform(it, x, y, z) }
+        val cannonEntity = player.getEntityMetadata(MetadataKey.ARTILLERY_ENTITY.key) ?: return
+        val taskId = cannonEntity.getIntMetadata(MetadataKey.TASK_ID.key)
+        if (taskId == null) {
+            run(cannonEntity)
+        } else {
+            plugin.server.scheduler.cancelTask(taskId)
+            cannonEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
+        }
+    }
 
-        Observable.interval(20, TimeUnit.MILLISECONDS)
-                .take(120)
-                .doOnNext {
-                    if (currentLocation.block.type != Material.AIR) {
-                        throw SkillResetException()
+    private fun run(cannonEntity: Entity) {
+        val task = object : BukkitRunnable() {
+            override fun run() {
+                val cannonPart = cannonEntity.getEntityMetadata(ArtilleryEntity.CANNON_3) as ArmorStand? ?: return
+                val cannonPart2 = cannonEntity.getEntityMetadata(ArtilleryEntity.CANNON_2) as ArmorStand? ?: return
+                val vector = cannonPart.location.subtract(cannonPart2.location).toVector().normalize()
+                if (!consume()) {
+                    cannonEntity.getIntMetadata(MetadataKey.TASK_ID.key)?.let {
+                        plugin.server.scheduler.cancelTask(it)
+                        cannonEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
                     }
-                    effect(currentLocation, range)
-                    drawEffect(it)
+                    return
                 }
-                .doOnError {
-                    explode(currentLocation)
+
+                val initialLocation = cannonPart.eyeLocation
+                initialLocation.add(vector.x * 1.0, vector.y * 1.0, vector.z * 1.0)
+                val x = 0.0
+                val y = 0.0
+                val z = 0.0
+                val currentLocation = initialLocation.let { LocationUtil.transform(it, x, y, z) }
+
+                Observable.interval(20, TimeUnit.MILLISECONDS)
+                        .take(120)
+                        .doOnNext {
+                            if (currentLocation.block.type != Material.AIR) {
+                                throw SkillResetException()
+                            }
+                            effect(currentLocation, range)
+                            drawEffect(currentLocation, it, vector)
+                        }
+                        .doOnError {
+                            explode(currentLocation)
+                        }
+                        .doOnComplete {
+                            explode(currentLocation)
+                        }
+                        .subscribe()
+            }
+        }.runTaskTimer(plugin, 0, 40)
+        val taskId = task.taskId
+        cannonEntity.setIntMetadata(plugin, MetadataKey.TASK_ID.key, taskId)
+    }
+
+    private fun consume(): Boolean {
+        val blocks = SkillRectRange(4.0, 2.0, 4.0).getBlocks(player.location)
+        blocks.forEach { block ->
+            val state = block.state
+            if (state is Container) {
+                state.inventory.contents.filterNotNull().forEach {
+                    if (it.type == Material.EGG) {
+                        it.amount -= 1
+                        return true
+                    }
                 }
-                .doOnComplete {
-                    explode(currentLocation)
-                }
-                .subscribe()
+            }
+        }
+        return false
     }
 
     private fun effect(location: Location, range: SkillRange) {
         object : BukkitRunnable() {
             override fun run() {
-                val entities = range.getEntities(location)
+                val entities = range.getEntities(location).filterNot { it is ArmorStand }
                 if (entities.isNotEmpty()) {
                     entities.forEach {
                         explode(location)
@@ -87,7 +127,7 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
 
      * @param data data
      */
-    private fun drawEffect(data: Long) {
+    private fun drawEffect(currentLocation: Location, data: Long, vector: Vector) {
         if (data == 1.toLong()) {
             currentLocation.playSound(Sound.ENTITY_GENERIC_EXPLODE, 3.0f, 0.933f)
         }
@@ -149,7 +189,7 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
     }
 
     private fun enemyEffect(entity: Entity) {
-        if(entity is LivingEntity){
+        if (entity is LivingEntity) {
             entity.damage(17.0)
         }
     }

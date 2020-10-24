@@ -1,9 +1,7 @@
 package net.atlantis.artillery.metadata
 
 enum class MetadataKey(val key:String) {
-    NAME("name"),
+    TASK_ID("taskId"),
     ARTILLERY_ENTITY("artilleryEntity"),
-    IS_ARTILLERY("isArtillery"),
-    IS_RIDING("isRiding"),
-    IS_PART("isPart");
+    IS_RIDING("isRiding");
 }
