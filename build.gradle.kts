@@ -17,8 +17,6 @@ repositories {
 dependencies {
     compile(Dependencies.Spigot.api)
     compile(Dependencies.Kotlin.stdlib)
-    compile(Dependencies.Kotlin.reflect)
-    compile(Dependencies.Rx.java)
 }
 
 buildscript {

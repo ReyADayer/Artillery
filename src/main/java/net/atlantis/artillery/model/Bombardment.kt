@@ -1,10 +1,10 @@
 package net.atlantis.artillery.model
 
-import io.reactivex.Observable
 import net.atlantis.artillery.ext.getEntityMetadata
 import net.atlantis.artillery.ext.getIntMetadata
 import net.atlantis.artillery.ext.playSound
 import net.atlantis.artillery.ext.random
+import net.atlantis.artillery.ext.runTaskTimerAsynchronously
 import net.atlantis.artillery.ext.setIntMetadata
 import net.atlantis.artillery.ext.spawnParticle
 import net.atlantis.artillery.metadata.MetadataKey
@@ -23,7 +23,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
-import java.util.concurrent.TimeUnit
 
 class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
     private val explodeEntities = mutableListOf<Entity>()
@@ -70,22 +69,14 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
                 val z = 0.0
                 val currentLocation = initialLocation.let { LocationUtil.transform(it, x, y, z) }
 
-                Observable.interval(20, TimeUnit.MILLISECONDS)
-                        .take(120)
-                        .doOnNext {
-                            if (currentLocation.block.type != Material.AIR) {
-                                throw SkillResetException()
-                            }
-                            effect(currentLocation, range)
-                            drawEffect(currentLocation, it, vector)
-                        }
-                        .doOnError {
-                            explode(currentLocation)
-                        }
-                        .doOnComplete {
-                            explode(currentLocation)
-                        }
-                        .subscribe()
+                plugin.runTaskTimerAsynchronously(0.02, {
+                    currentLocation.block.type != Material.AIR || it >= 120L
+                }, {
+                    effect(currentLocation, range)
+                    drawEffect(currentLocation, it, vector)
+                }, {
+                    explode(currentLocation)
+                })
             }
         }.runTaskTimer(plugin, 0, 40)
         val taskId = task.taskId
@@ -143,11 +134,15 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
     }
 
     private fun explode(location: Location) {
-        Observable.interval(20, TimeUnit.MILLISECONDS)
-                .take(30)
-                .filter { data -> data % 5 == 0.toLong() }
-                .doOnNext { drawExplode(location, it) }
-                .subscribe()
+        val currentLocation = location.clone()
+        plugin.runTaskTimerAsynchronously(0.02, {
+            it >= 30L
+        }, {
+            if (it % 5 == 0.toLong()) {
+                drawExplode(currentLocation, it)
+            }
+        }, {
+        })
     }
 
     private fun drawExplode(location: Location, data: Long) {
