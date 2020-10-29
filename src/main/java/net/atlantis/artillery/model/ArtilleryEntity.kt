@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import setNbt
 
-class ArtilleryEntity {
+class ArtilleryEntity : Artillery() {
     companion object {
         const val CANNON_1 = "cannon_1"
         const val CANNON_2 = "cannon_2"
@@ -262,7 +262,7 @@ class ArtilleryEntity {
         }
     }
 
-    fun create(location: Location, plugin: JavaPlugin) {
+    override fun create(location: Location, plugin: JavaPlugin) {
         val armorStand = location.spawn<ArmorStand> {
             it.customName = "砲台"
             it.isCustomNameVisible = true
@@ -323,7 +323,7 @@ class ArtilleryEntity {
         }
     }
 
-    fun onClick(player: Player, entity: Entity, plugin: JavaPlugin) {
+    override fun onClick(player: Player, entity: Entity, plugin: JavaPlugin) {
         if (entity.passengers.isNotEmpty()) {
             return
         }
