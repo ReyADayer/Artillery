@@ -25,20 +25,12 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
+class Bombardment(private val player: Player, private val plugin: JavaPlugin) : Skill(player, plugin) {
     private val explodeEntities = mutableListOf<Entity>()
 
     private val range = SkillRectRange(0.5, 0.5, 0.5)
 
-    fun execute() {
-        object : BukkitRunnable() {
-            override fun run() {
-                start()
-            }
-        }.runTaskLater(plugin, 1)
-    }
-
-    fun start() {
+    override fun start() {
         val cannonEntity = player.getEntityMetadata(MetadataKey.ARTILLERY_ENTITY.key) ?: return
         val taskId = cannonEntity.getIntMetadata(MetadataKey.TASK_ID.key)
         if (taskId == null) {
@@ -107,7 +99,6 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
                 if (entities.isNotEmpty()) {
                     entities.forEach {
                         explode(location)
-                        throw SkillResetException()
                     }
                 }
             }
@@ -189,6 +180,4 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) {
             entity.damage(17.0)
         }
     }
-
-    class SkillResetException : Exception()
 }
