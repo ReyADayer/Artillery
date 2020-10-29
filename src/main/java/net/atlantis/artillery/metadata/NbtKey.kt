@@ -1,4 +1,4 @@
-package net.atlantis.artillery.model
+package net.atlantis.artillery.metadata
 
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataType

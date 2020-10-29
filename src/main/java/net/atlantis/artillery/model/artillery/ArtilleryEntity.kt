@@ -1,8 +1,11 @@
-package net.atlantis.artillery.model
+package net.atlantis.artillery.model.artillery
 
 import net.atlantis.artillery.ext.getEntityMetadata
 import net.atlantis.artillery.ext.setEntityMetadata
 import net.atlantis.artillery.ext.spawn
+import net.atlantis.artillery.metadata.ArtilleryNbtKey
+import net.atlantis.artillery.metadata.BasicNbtKey
+import net.atlantis.artillery.model.RidingArtillery
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material

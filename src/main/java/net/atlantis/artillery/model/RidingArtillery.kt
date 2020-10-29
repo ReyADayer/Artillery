@@ -4,6 +4,7 @@ import net.atlantis.artillery.ext.runTaskTimerAsynchronously
 import net.atlantis.artillery.ext.setBooleanMetadata
 import net.atlantis.artillery.ext.setEntityMetadata
 import net.atlantis.artillery.metadata.MetadataKey
+import net.atlantis.artillery.model.artillery.ArtilleryEntity
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin

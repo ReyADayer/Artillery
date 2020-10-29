@@ -4,9 +4,9 @@ import getNbt
 import net.atlantis.artillery.ext.getBooleanMetadata
 import net.atlantis.artillery.metadata.MetadataKey
 import net.atlantis.artillery.metadata.PlayerFlagMetadata
-import net.atlantis.artillery.model.ArtilleryEntity
-import net.atlantis.artillery.model.ArtilleryNbtKey
-import net.atlantis.artillery.model.Bombardment
+import net.atlantis.artillery.model.artillery.ArtilleryEntity
+import net.atlantis.artillery.metadata.ArtilleryNbtKey
+import net.atlantis.artillery.model.skill.Bombardment
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

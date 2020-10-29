@@ -1,6 +1,6 @@
 package net.atlantis.artillery.command
 
-import net.atlantis.artillery.model.ArtilleryEntity
+import net.atlantis.artillery.model.artillery.ArtilleryEntity
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

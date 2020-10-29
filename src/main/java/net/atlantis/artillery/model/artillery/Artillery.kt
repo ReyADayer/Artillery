@@ -1,4 +1,4 @@
-package net.atlantis.artillery.model
+package net.atlantis.artillery.model.artillery
 
 import org.bukkit.Location
 import org.bukkit.entity.Entity

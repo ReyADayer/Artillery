@@ -1,4 +1,4 @@
-import net.atlantis.artillery.model.NbtKey
+import net.atlantis.artillery.metadata.NbtKey
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.plugin.java.JavaPlugin
 

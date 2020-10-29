@@ -1,4 +1,4 @@
-package net.atlantis.artillery.model
+package net.atlantis.artillery.model.skill
 
 import net.atlantis.artillery.ext.getEntityMetadata
 import net.atlantis.artillery.ext.getIntMetadata
@@ -8,6 +8,7 @@ import net.atlantis.artillery.ext.runTaskTimerAsynchronously
 import net.atlantis.artillery.ext.setIntMetadata
 import net.atlantis.artillery.ext.spawnParticle
 import net.atlantis.artillery.metadata.MetadataKey
+import net.atlantis.artillery.model.artillery.ArtilleryEntity
 import net.atlantis.artillery.range.SkillRange
 import net.atlantis.artillery.range.SkillRectRange
 import net.atlantis.artillery.util.LocationUtil
