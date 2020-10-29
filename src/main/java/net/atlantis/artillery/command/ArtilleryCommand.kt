@@ -1,6 +1,6 @@
 package net.atlantis.artillery.command
 
-import net.atlantis.artillery.model.artillery.ArtilleryEntity
+import net.atlantis.artillery.model.artillery.ArtilleryService
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -10,7 +10,9 @@ class ArtilleryCommand(private val plugin: JavaPlugin) : BaseCommand(plugin) {
     override fun onCommandByPlayer(player: Player, command: Command, label: String, args: CommandArgs): Boolean {
         return when (args[0]) {
             "set" -> {
-                ArtilleryEntity().create(player.location, plugin)
+                args[1]?.let {
+                    ArtilleryService.create(it, player.location, plugin)
+                }
                 true
             }
             else -> false

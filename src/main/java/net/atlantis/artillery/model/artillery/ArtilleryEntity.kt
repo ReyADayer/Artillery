@@ -6,6 +6,7 @@ import net.atlantis.artillery.ext.spawn
 import net.atlantis.artillery.metadata.ArtilleryNbtKey
 import net.atlantis.artillery.metadata.BasicNbtKey
 import net.atlantis.artillery.model.RidingArtillery
+import net.atlantis.artillery.model.skill.Bombardment
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -265,19 +266,13 @@ class ArtilleryEntity : Artillery() {
         }
     }
 
-    override fun create(location: Location, plugin: JavaPlugin) {
-        val armorStand = location.spawn<ArmorStand> {
-            it.customName = "砲台"
-            it.isCustomNameVisible = true
-            it.setAI(false)
-            it.isVisible = false
-            it.isSmall = true
-            it.persistentDataContainer.setNbt(plugin, ArtilleryNbtKey.IsArtillery, 1)
-        } as ArmorStand
+    override val name = "砲台"
+
+    override fun onCreate(armorStand: ArmorStand, plugin: JavaPlugin) {
         setArmorStands(armorStand, plugin)
     }
 
-    fun setArmorStands(entity: ArmorStand, plugin: JavaPlugin) {
+    private fun setArmorStands(entity: ArmorStand, plugin: JavaPlugin) {
         createArmorStand(cannon1Location(entity, entity), entity, CANNON_1, plugin) {
             it.setHelmet(ItemStack(Material.STONE))
         }
@@ -326,11 +321,12 @@ class ArtilleryEntity : Artillery() {
         }
     }
 
-    override fun onClick(player: Player, entity: Entity, plugin: JavaPlugin) {
-        if (entity.passengers.isNotEmpty()) {
-            return
-        }
+    override fun onRide(player: Player, entity: Entity, plugin: JavaPlugin) {
         RidingArtillery(entity, 300.0, plugin).set(player)
+    }
+
+    override fun onFire(player: Player, entity: Entity, plugin: JavaPlugin) {
+        Bombardment(player, plugin).execute()
     }
 
     private fun createArmorStand(

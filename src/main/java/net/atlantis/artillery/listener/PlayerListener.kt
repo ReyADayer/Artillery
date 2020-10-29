@@ -2,11 +2,10 @@ package net.atlantis.artillery.listener
 
 import getNbt
 import net.atlantis.artillery.ext.getBooleanMetadata
+import net.atlantis.artillery.metadata.ArtilleryNbtKey
 import net.atlantis.artillery.metadata.MetadataKey
 import net.atlantis.artillery.metadata.PlayerFlagMetadata
-import net.atlantis.artillery.model.artillery.ArtilleryEntity
-import net.atlantis.artillery.metadata.ArtilleryNbtKey
-import net.atlantis.artillery.model.skill.Bombardment
+import net.atlantis.artillery.model.artillery.ArtilleryService
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -29,7 +28,7 @@ class PlayerListener(private val plugin: JavaPlugin) : Listener {
         }
         if (event.action == Action.LEFT_CLICK_AIR && player.getBooleanMetadata(MetadataKey.IS_RIDING.key)) {
             playerFlagMetadata.avoidTwice(player)
-            Bombardment(player, plugin).execute()
+            ArtilleryService.fire(player, plugin)
             event.isCancelled = true
             return
         }
@@ -45,7 +44,7 @@ class PlayerListener(private val plugin: JavaPlugin) : Listener {
         if (entity is ArmorStand) {
             if (entity.persistentDataContainer.getNbt(plugin, ArtilleryNbtKey.IsArtillery, 0) == 1.toByte()) {
                 playerFlagMetadata.avoidTwice(player)
-                ArtilleryEntity().onClick(player, entity, plugin)
+                ArtilleryService.ride(player, entity, plugin)
                 event.isCancelled = true
             } else if (entity.persistentDataContainer.getNbt(plugin, ArtilleryNbtKey.IsPart, 0) == 1.toByte()) {
                 event.isCancelled = true
