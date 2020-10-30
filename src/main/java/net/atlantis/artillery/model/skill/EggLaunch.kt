@@ -5,7 +5,7 @@ import net.atlantis.artillery.ext.playSound
 import net.atlantis.artillery.ext.setIntMetadata
 import net.atlantis.artillery.ext.spawn
 import net.atlantis.artillery.metadata.MetadataKey
-import net.atlantis.artillery.model.artillery.EggArtilleryEntity
+import net.atlantis.artillery.model.artillery.EggArtillery
 import net.atlantis.artillery.range.SkillRectRange
 import net.atlantis.artillery.util.EntityUtil
 import net.atlantis.artillery.util.LocationUtil
@@ -33,9 +33,9 @@ class EggLaunch(private val player: Player, private val artilleryEntity: Entity,
     private fun run() {
         val task = object : BukkitRunnable() {
             override fun run() {
-                val cannonPart = EntityUtil.getEntityFromNbt(artilleryEntity, EggArtilleryEntity.CANNON_3, plugin) as ArmorStand?
+                val cannonPart = EntityUtil.getEntityFromNbt(artilleryEntity, EggArtillery.CANNON_3, plugin) as ArmorStand?
                         ?: return
-                val cannonPart2 = EntityUtil.getEntityFromNbt(artilleryEntity, EggArtilleryEntity.CANNON_2, plugin) as ArmorStand?
+                val cannonPart2 = EntityUtil.getEntityFromNbt(artilleryEntity, EggArtillery.CANNON_2, plugin) as ArmorStand?
                         ?: return
                 val vector = cannonPart.location.subtract(cannonPart2.location).toVector().normalize()
                 if (!consume()) {

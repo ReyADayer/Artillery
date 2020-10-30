@@ -7,7 +7,7 @@ import net.atlantis.artillery.ext.runTaskTimerAsynchronously
 import net.atlantis.artillery.ext.setIntMetadata
 import net.atlantis.artillery.ext.spawnParticle
 import net.atlantis.artillery.metadata.MetadataKey
-import net.atlantis.artillery.model.artillery.ArtilleryEntity
+import net.atlantis.artillery.model.artillery.BasicArtillery
 import net.atlantis.artillery.range.SkillRange
 import net.atlantis.artillery.range.SkillRectRange
 import net.atlantis.artillery.util.EntityUtil
@@ -44,9 +44,9 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
         val task = object : BukkitRunnable() {
             override fun run() {
 
-                val cannonPart = EntityUtil.getEntityFromNbt(artilleryEntity, ArtilleryEntity.CANNON_3, plugin) as ArmorStand?
+                val cannonPart = EntityUtil.getEntityFromNbt(artilleryEntity, BasicArtillery.CANNON_3, plugin) as ArmorStand?
                         ?: return
-                val cannonPart2 = EntityUtil.getEntityFromNbt(artilleryEntity, ArtilleryEntity.CANNON_2, plugin) as ArmorStand?
+                val cannonPart2 = EntityUtil.getEntityFromNbt(artilleryEntity, BasicArtillery.CANNON_2, plugin) as ArmorStand?
                         ?: return
                 val vector = cannonPart.location.subtract(cannonPart2.location).toVector().normalize()
                 if (!consume()) {

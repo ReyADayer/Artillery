@@ -38,16 +38,6 @@ object ArtilleryService {
     }
 
     private fun getArtillery(name: String?): Artillery? {
-        return when (name) {
-            ArtilleryEntity::class.simpleName -> {
-                ArtilleryEntity()
-            }
-            EggArtilleryEntity::class.simpleName -> {
-                EggArtilleryEntity()
-            }
-            else -> {
-                null
-            }
-        }
+        return ArtilleryType.find(name)?.getArtillery()
     }
 }

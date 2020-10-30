@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
-class ArtilleryEntity : Artillery() {
+class BasicArtillery : Artillery() {
     companion object {
         const val CANNON_1 = "cannon_1"
         const val CANNON_2 = "cannon_2"

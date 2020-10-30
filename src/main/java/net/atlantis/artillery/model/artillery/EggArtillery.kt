@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
-class EggArtilleryEntity : Artillery() {
+class EggArtillery : Artillery() {
     companion object {
         const val CANNON_1 = "cannon_1"
         const val CANNON_2 = "cannon_2"
@@ -305,20 +305,20 @@ class EggArtilleryEntity : Artillery() {
     }
 
     override fun setLocation(entity: Entity, passenger: LivingEntity, plugin: JavaPlugin) {
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.CANNON_1, plugin)?.teleport(ArtilleryEntity.cannon1Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.CANNON_2, plugin)?.teleport(ArtilleryEntity.cannon2Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.CANNON_3, plugin)?.teleport(ArtilleryEntity.cannon3Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_1, plugin)?.teleport(ArtilleryEntity.base1Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_2, plugin)?.teleport(ArtilleryEntity.base2Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_3, plugin)?.teleport(ArtilleryEntity.base3Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_4, plugin)?.teleport(ArtilleryEntity.base4Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_5, plugin)?.teleport(ArtilleryEntity.base5Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_6, plugin)?.teleport(ArtilleryEntity.base6Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_7, plugin)?.teleport(ArtilleryEntity.base7Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_8, plugin)?.teleport(ArtilleryEntity.base8Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.BASE_9, plugin)?.teleport(ArtilleryEntity.base9Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.HINGE_1, plugin)?.teleport(ArtilleryEntity.hinge1Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.HINGE_2, plugin)?.teleport(ArtilleryEntity.hinge2Location(entity, passenger))
-        EntityUtil.getEntityFromNbt(entity, ArtilleryEntity.TEXT, plugin)?.teleport(ArtilleryEntity.textLocation(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.CANNON_1, plugin)?.teleport(BasicArtillery.cannon1Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.CANNON_2, plugin)?.teleport(BasicArtillery.cannon2Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.CANNON_3, plugin)?.teleport(BasicArtillery.cannon3Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_1, plugin)?.teleport(BasicArtillery.base1Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_2, plugin)?.teleport(BasicArtillery.base2Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_3, plugin)?.teleport(BasicArtillery.base3Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_4, plugin)?.teleport(BasicArtillery.base4Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_5, plugin)?.teleport(BasicArtillery.base5Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_6, plugin)?.teleport(BasicArtillery.base6Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_7, plugin)?.teleport(BasicArtillery.base7Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_8, plugin)?.teleport(BasicArtillery.base8Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.BASE_9, plugin)?.teleport(BasicArtillery.base9Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.HINGE_1, plugin)?.teleport(BasicArtillery.hinge1Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.HINGE_2, plugin)?.teleport(BasicArtillery.hinge2Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BasicArtillery.TEXT, plugin)?.teleport(BasicArtillery.textLocation(entity, passenger))
     }
 }

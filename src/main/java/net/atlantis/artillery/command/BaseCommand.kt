@@ -3,10 +3,11 @@ package net.atlantis.artillery.command
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
-abstract class BaseCommand(private val plugin: JavaPlugin) : CommandExecutor {
+abstract class BaseCommand(private val plugin: JavaPlugin) : CommandExecutor, TabCompleter {
 
     abstract fun onCommandByPlayer(player: Player, command: Command, label: String, args: CommandArgs): Boolean
 
@@ -18,5 +19,9 @@ abstract class BaseCommand(private val plugin: JavaPlugin) : CommandExecutor {
             return onCommandByPlayer(sender, command, label, commandArgs)
         }
         return onCommandByOther(sender, command, label, commandArgs)
+    }
+
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
+        return emptyList()
     }
 }
