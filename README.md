@@ -3,4 +3,11 @@
 
 ## usage
 
-/artillery set
+設置
+
+/artillery set ArtilleryEntity
+/artillery set EggArtilleryEntity
+
+撤去
+
+/artillery remove all
