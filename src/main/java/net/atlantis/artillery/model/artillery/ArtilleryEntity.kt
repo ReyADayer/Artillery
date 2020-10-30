@@ -1,7 +1,7 @@
 package net.atlantis.artillery.model.artillery
 
-import net.atlantis.artillery.ext.getEntityMetadata
 import net.atlantis.artillery.model.skill.Bombardment
+import net.atlantis.artillery.util.EntityUtil
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -301,24 +301,24 @@ class ArtilleryEntity : Artillery() {
     }
 
     override fun onFire(player: Player, entity: Entity, plugin: JavaPlugin) {
-        Bombardment(player, plugin).execute()
+        Bombardment(player, entity, plugin).execute()
     }
 
-    override fun setLocation(entity: Entity, passenger: LivingEntity) {
-        entity.getEntityMetadata(CANNON_1)?.teleport(cannon1Location(entity, passenger))
-        entity.getEntityMetadata(CANNON_2)?.teleport(cannon2Location(entity, passenger))
-        entity.getEntityMetadata(CANNON_3)?.teleport(cannon3Location(entity, passenger))
-        entity.getEntityMetadata(BASE_1)?.teleport(base1Location(entity, passenger))
-        entity.getEntityMetadata(BASE_2)?.teleport(base2Location(entity, passenger))
-        entity.getEntityMetadata(BASE_3)?.teleport(base3Location(entity, passenger))
-        entity.getEntityMetadata(BASE_4)?.teleport(base4Location(entity, passenger))
-        entity.getEntityMetadata(BASE_5)?.teleport(base5Location(entity, passenger))
-        entity.getEntityMetadata(BASE_6)?.teleport(base6Location(entity, passenger))
-        entity.getEntityMetadata(BASE_7)?.teleport(base7Location(entity, passenger))
-        entity.getEntityMetadata(BASE_8)?.teleport(base8Location(entity, passenger))
-        entity.getEntityMetadata(BASE_9)?.teleport(base9Location(entity, passenger))
-        entity.getEntityMetadata(HINGE_1)?.teleport(hinge1Location(entity, passenger))
-        entity.getEntityMetadata(HINGE_2)?.teleport(hinge2Location(entity, passenger))
-        entity.getEntityMetadata(TEXT)?.teleport(textLocation(entity, passenger))
+    override fun setLocation(entity: Entity, passenger: LivingEntity, plugin: JavaPlugin) {
+        EntityUtil.getEntityFromNbt(entity, CANNON_1, plugin)?.teleport(cannon1Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, CANNON_2, plugin)?.teleport(cannon2Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, CANNON_3, plugin)?.teleport(cannon3Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_1, plugin)?.teleport(base1Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_2, plugin)?.teleport(base2Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_3, plugin)?.teleport(base3Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_4, plugin)?.teleport(base4Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_5, plugin)?.teleport(base5Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_6, plugin)?.teleport(base6Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_7, plugin)?.teleport(base7Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_8, plugin)?.teleport(base8Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, BASE_9, plugin)?.teleport(base9Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, HINGE_1, plugin)?.teleport(hinge1Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, HINGE_2, plugin)?.teleport(hinge2Location(entity, passenger))
+        EntityUtil.getEntityFromNbt(entity, TEXT, plugin)?.teleport(textLocation(entity, passenger))
     }
 }

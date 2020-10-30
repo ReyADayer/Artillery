@@ -15,6 +15,15 @@ class ArtilleryCommand(private val plugin: JavaPlugin) : BaseCommand(plugin) {
                 }
                 true
             }
+            "remove" -> {
+                when (args[1]) {
+                    "all" -> {
+                        ArtilleryService.removeAll(player, plugin)
+                        true
+                    }
+                    else -> false
+                }
+            }
             else -> false
         }
     }

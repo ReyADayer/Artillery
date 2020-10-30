@@ -1,6 +1,5 @@
 package net.atlantis.artillery.model.skill
 
-import net.atlantis.artillery.ext.getEntityMetadata
 import net.atlantis.artillery.ext.getIntMetadata
 import net.atlantis.artillery.ext.playSound
 import net.atlantis.artillery.ext.setIntMetadata
@@ -8,6 +7,7 @@ import net.atlantis.artillery.ext.spawn
 import net.atlantis.artillery.metadata.MetadataKey
 import net.atlantis.artillery.model.artillery.EggArtilleryEntity
 import net.atlantis.artillery.range.SkillRectRange
+import net.atlantis.artillery.util.EntityUtil
 import net.atlantis.artillery.util.LocationUtil
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -19,28 +19,29 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class EggLaunch(private val player: Player, private val plugin: JavaPlugin) : Skill(player, plugin) {
+class EggLaunch(private val player: Player, private val artilleryEntity: Entity, private val plugin: JavaPlugin) : Skill(player, plugin) {
     override fun start() {
-        val cannonEntity = player.getEntityMetadata(MetadataKey.ARTILLERY_ENTITY.key) ?: return
-        val taskId = cannonEntity.getIntMetadata(MetadataKey.TASK_ID.key)
+        val taskId = artilleryEntity.getIntMetadata(MetadataKey.TASK_ID.key)
         if (taskId == null) {
-            run(cannonEntity)
+            run()
         } else {
             plugin.server.scheduler.cancelTask(taskId)
-            cannonEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
+            artilleryEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
         }
     }
 
-    private fun run(cannonEntity: Entity) {
+    private fun run() {
         val task = object : BukkitRunnable() {
             override fun run() {
-                val cannonPart = cannonEntity.getEntityMetadata(EggArtilleryEntity.CANNON_3) as ArmorStand? ?: return
-                val cannonPart2 = cannonEntity.getEntityMetadata(EggArtilleryEntity.CANNON_2) as ArmorStand? ?: return
+                val cannonPart = EntityUtil.getEntityFromNbt(artilleryEntity, EggArtilleryEntity.CANNON_3, plugin) as ArmorStand?
+                        ?: return
+                val cannonPart2 = EntityUtil.getEntityFromNbt(artilleryEntity, EggArtilleryEntity.CANNON_2, plugin) as ArmorStand?
+                        ?: return
                 val vector = cannonPart.location.subtract(cannonPart2.location).toVector().normalize()
                 if (!consume()) {
-                    cannonEntity.getIntMetadata(MetadataKey.TASK_ID.key)?.let {
+                    artilleryEntity.getIntMetadata(MetadataKey.TASK_ID.key)?.let {
                         plugin.server.scheduler.cancelTask(it)
-                        cannonEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
+                        artilleryEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
                     }
                     return
                 }
@@ -59,7 +60,7 @@ class EggLaunch(private val player: Player, private val plugin: JavaPlugin) : Sk
             }
         }.runTaskTimer(plugin, 0, 40)
         val taskId = task.taskId
-        cannonEntity.setIntMetadata(plugin, MetadataKey.TASK_ID.key, taskId)
+        artilleryEntity.setIntMetadata(plugin, MetadataKey.TASK_ID.key, taskId)
     }
 
     private fun consume(): Boolean {

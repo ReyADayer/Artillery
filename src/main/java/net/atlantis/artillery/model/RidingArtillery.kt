@@ -2,7 +2,7 @@ package net.atlantis.artillery.model
 
 import net.atlantis.artillery.ext.runTaskTimerAsynchronously
 import net.atlantis.artillery.ext.setBooleanMetadata
-import net.atlantis.artillery.ext.setEntityMetadata
+import net.atlantis.artillery.ext.setStringMetadata
 import net.atlantis.artillery.metadata.MetadataKey
 import net.atlantis.artillery.model.artillery.Artillery
 import org.bukkit.entity.Entity
@@ -15,7 +15,7 @@ class RidingArtillery(val artillery: Artillery, val entity: Entity, val second: 
     private fun effect(player: Player, currentSecond: Int) {
         object : BukkitRunnable() {
             override fun run() {
-                artillery.setLocation(entity, player)
+                artillery.setLocation(entity, player, plugin)
             }
         }.runTaskLater(plugin, 1)
     }
@@ -30,10 +30,10 @@ class RidingArtillery(val artillery: Artillery, val entity: Entity, val second: 
     }
 
     fun set(player: Player) {
-        player.setEntityMetadata(plugin, MetadataKey.ARTILLERY_ENTITY.key, entity)
+        player.setStringMetadata(plugin, MetadataKey.ARTILLERY_ENTITY.key, entity.uniqueId.toString())
         player.setBooleanMetadata(plugin, MetadataKey.IS_RIDING.key, true)
         entity.addPassenger(player)
-        artillery.setLocation(entity, player)
+        artillery.setLocation(entity, player, plugin)
         plugin.runTaskTimerAsynchronously(0.1, {
             !player.hasMetadata(MetadataKey.IS_RIDING.key) || player.isDead
         }, {

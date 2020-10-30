@@ -1,15 +1,16 @@
 package net.atlantis.artillery.model.artillery
 
-import net.atlantis.artillery.ext.setEntityMetadata
 import net.atlantis.artillery.ext.spawn
 import net.atlantis.artillery.metadata.ArtilleryNbtKey
 import net.atlantis.artillery.metadata.BasicNbtKey
 import net.atlantis.artillery.model.RidingArtillery
 import org.bukkit.Location
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import setNbt
 
@@ -45,7 +46,7 @@ abstract class Artillery {
     abstract fun onRide(player: Player, entity: Entity, plugin: JavaPlugin)
     abstract fun onFire(player: Player, entity: Entity, plugin: JavaPlugin)
 
-    abstract fun setLocation(entity: Entity, passenger: LivingEntity)
+    abstract fun setLocation(entity: Entity, passenger: LivingEntity, plugin: JavaPlugin)
 
     protected fun createCannonPartArmorStand(
             location: Location,
@@ -58,7 +59,7 @@ abstract class Artillery {
             onCreate.invoke(it)
             it.setGravity(false)
             it.isVisible = false
-            entity.setEntityMetadata(plugin, tag, it)
+            entity.persistentDataContainer.set(NamespacedKey(plugin, tag), PersistentDataType.STRING, it.uniqueId.toString())
             it.persistentDataContainer.setNbt(plugin, BasicNbtKey.Name, "CannonPart")
             it.persistentDataContainer.setNbt(plugin, ArtilleryNbtKey.IsPart, 1)
         }
