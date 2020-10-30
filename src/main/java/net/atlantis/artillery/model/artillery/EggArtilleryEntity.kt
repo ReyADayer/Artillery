@@ -1,7 +1,7 @@
 package net.atlantis.artillery.model.artillery
 
 import net.atlantis.artillery.ext.getEntityMetadata
-import net.atlantis.artillery.model.skill.Bombardment
+import net.atlantis.artillery.model.skill.EggLaunch
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
-class ArtilleryEntity : Artillery() {
+class EggArtilleryEntity : Artillery() {
     companion object {
         const val CANNON_1 = "cannon_1"
         const val CANNON_2 = "cannon_2"
@@ -242,7 +242,7 @@ class ArtilleryEntity : Artillery() {
         }
     }
 
-    override val name = "砲台"
+    override val name = "卵砲台"
 
     override fun onCreate(armorStand: ArmorStand, plugin: JavaPlugin) {
         setArmorStands(armorStand, plugin)
@@ -250,13 +250,13 @@ class ArtilleryEntity : Artillery() {
 
     private fun setArmorStands(entity: ArmorStand, plugin: JavaPlugin) {
         createCannonPartArmorStand(cannon1Location(entity, entity), entity, CANNON_1, plugin) {
-            it.setHelmet(ItemStack(Material.STONE))
+            it.setHelmet(ItemStack(Material.HAY_BLOCK))
         }
         createCannonPartArmorStand(cannon2Location(entity, entity), entity, CANNON_2, plugin) {
-            it.setHelmet(ItemStack(Material.STONE))
+            it.setHelmet(ItemStack(Material.HAY_BLOCK))
         }
         createCannonPartArmorStand(cannon3Location(entity, entity), entity, CANNON_3, plugin) {
-            it.setHelmet(ItemStack(Material.STONE))
+            it.setHelmet(ItemStack(Material.HAY_BLOCK))
         }
         createCannonPartArmorStand(base1Location(entity, entity), entity, BASE_1, plugin) {
             it.setHelmet(ItemStack(Material.CHISELED_STONE_BRICKS))
@@ -301,7 +301,7 @@ class ArtilleryEntity : Artillery() {
     }
 
     override fun onFire(player: Player, entity: Entity, plugin: JavaPlugin) {
-        Bombardment(player, plugin).execute()
+        EggLaunch(player, plugin).execute()
     }
 
     override fun setLocation(entity: Entity, passenger: LivingEntity) {

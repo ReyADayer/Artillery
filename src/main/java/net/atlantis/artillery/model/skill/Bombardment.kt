@@ -82,7 +82,7 @@ class Bombardment(private val player: Player, private val plugin: JavaPlugin) : 
             val state = block.state
             if (state is Container) {
                 state.inventory.contents.filterNotNull().forEach {
-                    if (it.type == Material.EGG) {
+                    if (it.type == Material.GUNPOWDER) {
                         it.amount -= 1
                         return true
                     }

@@ -1,11 +1,14 @@
 package net.atlantis.artillery.model.artillery
 
+import net.atlantis.artillery.ext.setEntityMetadata
 import net.atlantis.artillery.ext.spawn
 import net.atlantis.artillery.metadata.ArtilleryNbtKey
 import net.atlantis.artillery.metadata.BasicNbtKey
+import net.atlantis.artillery.model.RidingArtillery
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import setNbt
@@ -30,6 +33,7 @@ abstract class Artillery {
         if (entity.passengers.isNotEmpty()) {
             return
         }
+        RidingArtillery(this, entity, 300.0, plugin).set(player)
         onRide(player, entity, plugin)
     }
 
@@ -40,4 +44,23 @@ abstract class Artillery {
     abstract fun onCreate(armorStand: ArmorStand, plugin: JavaPlugin)
     abstract fun onRide(player: Player, entity: Entity, plugin: JavaPlugin)
     abstract fun onFire(player: Player, entity: Entity, plugin: JavaPlugin)
+
+    abstract fun setLocation(entity: Entity, passenger: LivingEntity)
+
+    protected fun createCannonPartArmorStand(
+            location: Location,
+            entity: Entity,
+            tag: String,
+            plugin: JavaPlugin,
+            onCreate: (armorStand: ArmorStand) -> Unit
+    ) {
+        location.spawn<ArmorStand> {
+            onCreate.invoke(it)
+            it.setGravity(false)
+            it.isVisible = false
+            entity.setEntityMetadata(plugin, tag, it)
+            it.persistentDataContainer.setNbt(plugin, BasicNbtKey.Name, "CannonPart")
+            it.persistentDataContainer.setNbt(plugin, ArtilleryNbtKey.IsPart, 1)
+        }
+    }
 }

@@ -4,18 +4,18 @@ import net.atlantis.artillery.ext.runTaskTimerAsynchronously
 import net.atlantis.artillery.ext.setBooleanMetadata
 import net.atlantis.artillery.ext.setEntityMetadata
 import net.atlantis.artillery.metadata.MetadataKey
-import net.atlantis.artillery.model.artillery.ArtilleryEntity
+import net.atlantis.artillery.model.artillery.Artillery
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class RidingArtillery(val artillery: Entity, val second: Double, val plugin: JavaPlugin) {
+class RidingArtillery(val artillery: Artillery, val entity: Entity, val second: Double, val plugin: JavaPlugin) {
 
     private fun effect(player: Player, currentSecond: Int) {
         object : BukkitRunnable() {
             override fun run() {
-                ArtilleryEntity.setLocation(artillery, player)
+                artillery.setLocation(entity, player)
             }
         }.runTaskLater(plugin, 1)
     }
@@ -24,16 +24,16 @@ class RidingArtillery(val artillery: Entity, val second: Double, val plugin: Jav
         object : BukkitRunnable() {
             override fun run() {
                 player.removeMetadata(MetadataKey.ARTILLERY_ENTITY.key, plugin)
-                artillery.removePassenger(player)
+                entity.removePassenger(player)
             }
         }.runTaskLater(plugin, 1)
     }
 
     fun set(player: Player) {
-        player.setEntityMetadata(plugin, MetadataKey.ARTILLERY_ENTITY.key, artillery)
+        player.setEntityMetadata(plugin, MetadataKey.ARTILLERY_ENTITY.key, entity)
         player.setBooleanMetadata(plugin, MetadataKey.IS_RIDING.key, true)
-        artillery.addPassenger(player)
-        ArtilleryEntity.setLocation(artillery, player)
+        entity.addPassenger(player)
+        artillery.setLocation(entity, player)
         plugin.runTaskTimerAsynchronously(0.1, {
             !player.hasMetadata(MetadataKey.IS_RIDING.key) || player.isDead
         }, {
