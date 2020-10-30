@@ -34,9 +34,13 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
         val taskId = artilleryEntity.getIntMetadata(MetadataKey.TASK_ID.key)
         if (taskId == null) {
             run()
+            player.sendMessage("砲台 ON")
+            player.playSound(player.location, Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f)
         } else {
             plugin.server.scheduler.cancelTask(taskId)
             artilleryEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
+            player.sendMessage("砲台 OFF")
+            player.playSound(player.location, Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f)
         }
     }
 
@@ -79,7 +83,7 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
     }
 
     private fun consume(): Boolean {
-        val blocks = SkillRectRange(4.0, 2.0, 4.0).getBlocks(player.location)
+        val blocks = SkillRectRange(4.0, 2.0, 4.0).getBlocks(artilleryEntity.location)
         blocks.forEach { block ->
             val state = block.state
             if (state is Container) {

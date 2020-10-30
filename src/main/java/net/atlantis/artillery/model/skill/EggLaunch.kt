@@ -24,9 +24,13 @@ class EggLaunch(private val player: Player, private val artilleryEntity: Entity,
         val taskId = artilleryEntity.getIntMetadata(MetadataKey.TASK_ID.key)
         if (taskId == null) {
             run()
+            player.sendMessage("砲台 ON")
+            player.playSound(player.location, Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f)
         } else {
             plugin.server.scheduler.cancelTask(taskId)
             artilleryEntity.removeMetadata(MetadataKey.TASK_ID.key, plugin)
+            player.sendMessage("砲台 OFF")
+            player.playSound(player.location, Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f)
         }
     }
 
@@ -58,13 +62,13 @@ class EggLaunch(private val player: Player, private val artilleryEntity: Entity,
                     it.velocity = vector
                 }
             }
-        }.runTaskTimer(plugin, 0, 40)
+        }.runTaskTimer(plugin, 0, 20)
         val taskId = task.taskId
         artilleryEntity.setIntMetadata(plugin, MetadataKey.TASK_ID.key, taskId)
     }
 
     private fun consume(): Boolean {
-        val blocks = SkillRectRange(4.0, 2.0, 4.0).getBlocks(player.location)
+        val blocks = SkillRectRange(4.0, 2.0, 4.0).getBlocks(artilleryEntity.location)
         blocks.forEach { block ->
             val state = block.state
             if (state is Container) {
