@@ -2,7 +2,6 @@ package net.atlantis.artillery.model.skill
 
 import net.atlantis.artillery.ext.getIntMetadata
 import net.atlantis.artillery.ext.playSound
-import net.atlantis.artillery.ext.random
 import net.atlantis.artillery.ext.runTaskTimerAsynchronously
 import net.atlantis.artillery.ext.setIntMetadata
 import net.atlantis.artillery.ext.spawnParticle
@@ -132,53 +131,15 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
     }
 
     private fun explode(location: Location) {
-        val currentLocation = location.clone()
-        plugin.runTaskTimerAsynchronously(0.02, {
-            it >= 30L
-        }, {
-            if (it % 5 == 0.toLong()) {
-                drawExplode(currentLocation, it)
-            }
-        }, {
-        })
-    }
-
-    private fun drawExplode(location: Location, data: Long) {
-        val radius = data / 5
-        if (data == 5.toLong()) {
-            location.playSound(Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.933f)
-        }
-        for (i in 0..10) {
-            for (j in 0..10) {
-                val angle1 = 2.0 * Math.PI * i.toDouble() / 10
-                val angle2 = 2.0 * Math.PI * j.toDouble() / 10
-                val x = radius * Math.sin(angle1) * Math.cos(angle2)
-                val y = radius * Math.sin(angle1) * Math.sin(angle2)
-                val z = radius * Math.cos(angle1)
-                val currentLocation = location.clone().add(x, y, z)
-                if (data % 3 == 0L) {
-                    currentLocation.random(0.1, 0.1, 0.1).spawnParticle(Particle.EXPLOSION_LARGE, 1)
-                }
-                currentLocation.random(0.1, 0.1, 0.1).spawnParticle(Particle.FLAME, 2)
-                explodeEffect(currentLocation, range)
-            }
-        }
-    }
-
-    private fun explodeEffect(location: Location, range: SkillRange) {
+        location.spawnParticle(Particle.EXPLOSION_HUGE, 2)
+        location.playSound(Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.933f)
         object : BukkitRunnable() {
             override fun run() {
-                val entities = range.getEntities(location)
-                if (entities.isNotEmpty()) {
-                    entities.forEach {
-                        if (!explodeEntities.contains(it)) {
-                            enemyEffect(it)
-                            explodeEntities.add(it)
-                        }
-                    }
+                location.world?.getNearbyEntities(location, 3.0, 3.0, 3.0)?.forEach {
+                    enemyEffect(it)
                 }
             }
-        }.runTaskLater(plugin, 0)
+        }.runTaskLater(plugin, 1)
     }
 
     private fun enemyEffect(entity: Entity) {
