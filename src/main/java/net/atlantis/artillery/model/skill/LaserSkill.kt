@@ -24,8 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.Vector
 
-class Bombardment(private val player: Player, private val artilleryEntity: Entity, private val plugin: JavaPlugin) : Skill(player, plugin) {
-    private val explodeEntities = mutableListOf<Entity>()
+class LaserSkill(private val player: Player, private val artilleryEntity: Entity, private val plugin: JavaPlugin) : Skill(player, plugin) {
 
     private val range = SkillRectRange(0.5, 0.5, 0.5)
 
@@ -73,10 +72,9 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
                     effect(currentLocation, range)
                     drawEffect(currentLocation, it, vector)
                 }, {
-                    explode(currentLocation)
                 })
             }
-        }.runTaskTimer(plugin, 0, 40)
+        }.runTaskTimer(plugin, 0, 100)
         val taskId = task.taskId
         artilleryEntity.setIntMetadata(plugin, MetadataKey.TASK_ID.key, taskId)
     }
@@ -87,7 +85,7 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
             val state = block.state
             if (state is Container) {
                 state.inventory.contents.filterNotNull().forEach {
-                    if (it.type == Material.GUNPOWDER) {
+                    if (it.type == Material.GLOWSTONE_DUST) {
                         it.amount -= 1
                         return true
                     }
@@ -103,7 +101,7 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
                 val entities = range.getEntities(location).filterNot { it is ArmorStand }
                 if (entities.isNotEmpty()) {
                     entities.forEach {
-                        explode(location)
+                        enemyEffect(it)
                     }
                 }
             }
@@ -117,34 +115,20 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
      */
     private fun drawEffect(currentLocation: Location, data: Long, vector: Vector) {
         if (data == 1.toLong()) {
-            currentLocation.playSound(Sound.ENTITY_GENERIC_EXPLODE, 3.0f, 0.933f)
+            currentLocation.playSound(Sound.BLOCK_ANVIL_PLACE, 3.0f, 0.933f)
         }
-        val drawVector = vector.clone().multiply(0.4)
-        currentLocation.spawnParticle(Particle.CLOUD, 1)
-        currentLocation.spawnParticle(Particle.END_ROD, 3)
+        val drawVector = vector.clone().multiply(0.8)
+        currentLocation.spawnParticle(Particle.DRAGON_BREATH, 1)
         if (data % 10 == 0.toLong()) {
-            currentLocation.playSound(Sound.ENTITY_CREEPER_PRIMED, 3.0f, 0.933f)
+            currentLocation.playSound(Sound.BLOCK_METAL_BREAK, 3.0f, 0.933f)
         }
         effect(currentLocation, range)
         currentLocation.add(drawVector)
-        currentLocation.add(0.0, -0.00004 * data * data, 0.0)
-    }
-
-    private fun explode(location: Location) {
-        location.spawnParticle(Particle.EXPLOSION_HUGE, 2)
-        location.playSound(Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.933f)
-        object : BukkitRunnable() {
-            override fun run() {
-                location.world?.getNearbyEntities(location, 3.0, 3.0, 3.0)?.forEach {
-                    enemyEffect(it)
-                }
-            }
-        }.runTaskLater(plugin, 1)
     }
 
     private fun enemyEffect(entity: Entity) {
         if (entity is LivingEntity) {
-            entity.damage(17.0)
+            entity.damage(10.0)
         }
     }
 }

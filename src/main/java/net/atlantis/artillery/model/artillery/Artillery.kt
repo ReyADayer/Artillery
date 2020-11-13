@@ -62,6 +62,7 @@ abstract class Artillery {
             entity.persistentDataContainer.set(NamespacedKey(plugin, tag), PersistentDataType.STRING, it.uniqueId.toString())
             it.persistentDataContainer.setNbt(plugin, BasicNbtKey.Name, "CannonPart")
             it.persistentDataContainer.setNbt(plugin, ArtilleryNbtKey.IsPart, 1)
+            it.persistentDataContainer.setNbt(plugin, ArtilleryNbtKey.ArtilleryUniqueId, entity.uniqueId.toString())
         }
     }
 }

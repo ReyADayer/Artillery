@@ -2,6 +2,7 @@ package net.atlantis.artillery.command
 
 import net.atlantis.artillery.model.artillery.ArtilleryService
 import net.atlantis.artillery.model.artillery.ArtilleryType
+import net.atlantis.artillery.model.item.ItemType
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -24,6 +25,13 @@ class ArtilleryCommand(private val plugin: JavaPlugin) : BaseCommand(plugin) {
                     }
                     else -> false
                 }
+            }
+            Action.ITEM -> {
+                args[1]?.let {
+                    val itemStack = ItemType.findByKey(it)?.getItem()?.toItemStack(plugin) ?: return true
+                    player.inventory.addItem(itemStack)
+                }
+                true
             }
             else -> false
         }
@@ -50,6 +58,10 @@ class ArtilleryCommand(private val plugin: JavaPlugin) : BaseCommand(plugin) {
                         val keys = listOf("all")
                         keys.filter { it.startsWith(args[1]) }
                     }
+                    Action.ITEM -> {
+                        val keys = ItemType.values().map { it.key }
+                        keys.filter { it.startsWith(args[1]) }
+                    }
                     else -> {
                         emptyList()
                     }
@@ -62,6 +74,7 @@ class ArtilleryCommand(private val plugin: JavaPlugin) : BaseCommand(plugin) {
     }
 
     private enum class Action(val value: String) {
+        ITEM("item"),
         SET("set"),
         REMOVE("remove");
 

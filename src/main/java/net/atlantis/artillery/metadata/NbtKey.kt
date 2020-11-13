@@ -15,4 +15,5 @@ sealed class BasicNbtKey<T>(persistentDataType: PersistentDataType<T, T>) : NbtK
 sealed class ArtilleryNbtKey<T>(persistentDataType: PersistentDataType<T, T>) : NbtKey<T>(persistentDataType) {
     object IsArtillery : ArtilleryNbtKey<Byte>(PersistentDataType.BYTE)
     object IsPart : ArtilleryNbtKey<Byte>(PersistentDataType.BYTE)
+    object ArtilleryUniqueId : ArtilleryNbtKey<String>(PersistentDataType.STRING)
 }
