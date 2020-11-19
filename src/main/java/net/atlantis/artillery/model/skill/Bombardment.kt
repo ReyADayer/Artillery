@@ -131,13 +131,9 @@ class Bombardment(private val player: Player, private val artilleryEntity: Entit
     }
 
     private fun explode(location: Location) {
-        location.spawnParticle(Particle.EXPLOSION_HUGE, 2)
-        location.playSound(Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.933f)
         object : BukkitRunnable() {
             override fun run() {
-                location.world?.getNearbyEntities(location, 3.0, 3.0, 3.0)?.forEach {
-                    enemyEffect(it)
-                }
+                location.world?.createExplosion(location, 3.0f)
             }
         }.runTaskLater(plugin, 1)
     }
