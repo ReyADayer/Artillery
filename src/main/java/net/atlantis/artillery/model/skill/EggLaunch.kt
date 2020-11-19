@@ -35,6 +35,7 @@ class EggLaunch(private val player: Player, private val artilleryEntity: Entity,
     }
 
     private fun run() {
+        val period = plugin.config.getLong("egg_period")
         val task = object : BukkitRunnable() {
             override fun run() {
                 val cannonPart = EntityUtil.getEntityFromNbt(artilleryEntity, EggArtillery.CANNON_3, plugin) as ArmorStand?
@@ -62,7 +63,7 @@ class EggLaunch(private val player: Player, private val artilleryEntity: Entity,
                     it.velocity = vector
                 }
             }
-        }.runTaskTimer(plugin, 0, 20)
+        }.runTaskTimer(plugin, 0, period)
         val taskId = task.taskId
         artilleryEntity.setIntMetadata(plugin, MetadataKey.TASK_ID.key, taskId)
     }

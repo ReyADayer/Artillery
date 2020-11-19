@@ -13,6 +13,8 @@ class Artillery : JavaPlugin() {
         registerListener(ItemListener(this))
 
         initCommand("artillery", ArtilleryCommand(this))
+
+        saveDefaultConfig()
     }
 
     override fun onDisable() {
